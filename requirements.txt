@@ -1,0 +1,5 @@
+pyftpdlib
+rdkit
+matplotlib
+scipy
+numpy
