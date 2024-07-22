@@ -85,27 +85,7 @@ class DrawFromN2000:
         up = False
         for i, y_idx in enumerate(self.y_data):
             if self.x_data[i] > max_minutes:
-                # json_data = json.dumps(self.heigh_points, indent=4)
-                sum_trapz_area = sum(trapz_area_list)
-                sum_simpson_area = sum(simpson_area_list)
-                for hp in self.heigh_points:
-                    hp["trapz_area rate(%)"] = hp["trapz_area"] / sum_trapz_area
-                    hp["simpson_area rate(%)"] = hp["simpson_area"] / sum_simpson_area
-                if not self.using_org_file and not self.using_text_file and not os.path.exists("export"):
-                    os.makedirs("export")
-                    file_name = "export.csv"
-                    file_path = os.path.join("export", file_name)
-                if self.using_text_file:
-                    file_name = os.path.split(self.text_file)[-1].split(".")[0]+"_text.csv"
-                    file_path = os.path.join(os.path.dirname(self.text_file), file_name)
-                if self.using_org_file:
-                    file_name = os.path.split(self.org_file_name)[-1].split(".")[0]+"_org.csv"
-                    file_path = os.path.join(os.path.dirname(self.org_file_name), file_name)
-                with open(os.path.join(file_path), "w", newline="") as file:
-                    writer = csv.DictWriter(file, fieldnames=self.heigh_points[0].keys())
-                    writer.writeheader()
-                    writer.writerows(self.heigh_points)
-                return
+                break
             if i> 0 and round(y_idx, ndight) > round(self.y_data[i-1], ndight):
                 up = True
             elif i> 0 and round(y_idx, ndight) < round(self.y_data[i-1], ndight):
@@ -137,6 +117,27 @@ class DrawFromN2000:
                     default_l = i
                     default_y = y_idx
                     down = False
+        # export csv
+        sum_trapz_area = sum(trapz_area_list)
+        sum_simpson_area = sum(simpson_area_list)
+        for hp in self.heigh_points:
+            hp["trapz_area rate(%)"] = hp["trapz_area"] / sum_trapz_area
+            hp["simpson_area rate(%)"] = hp["simpson_area"] / sum_simpson_area
+        if not self.using_org_file and not self.using_text_file and not os.path.exists("export"):
+            os.makedirs("export")
+            file_name = "export.csv"
+            file_path = os.path.join("export", file_name)
+        if self.using_text_file:
+            file_name = os.path.split(self.text_file)[-1].split(".")[0]+"_text.csv"
+            file_path = os.path.join(os.path.dirname(self.text_file), file_name)
+        if self.using_org_file:
+            file_name = os.path.split(self.org_file_name)[-1].split(".")[0]+"_org.csv"
+            file_path = os.path.join(os.path.dirname(self.org_file_name), file_name)
+        with open(os.path.join(file_path), "w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=self.heigh_points[0].keys())
+            writer.writeheader()
+            writer.writerows(self.heigh_points)
+        return
 
     def save_x_y_data(self, file_name="data.csv"):
         # np.savetxt(os.path.join("export", file_name), np.array([self.x_data, self.y_data]), delimiter=',')
@@ -235,7 +236,7 @@ class DrawFromN2000:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='draw n2000 export')
     parser.add_argument('--text_file', "-t", type=str, help='file name', default=r"C:\Users\admin\Desktop\temp\a.txt")
-    parser.add_argument('--org_file', "-o", type=str, help='file name', default=r"C:\Users\admin\Desktop\tools\ignore\2024-07-19-01-04.org")
+    parser.add_argument('--org_file', "-o", type=str, help='file name', default=r"C:\Users\admin\Desktop\tools\export\2024-07-19-01-04.org")
     parser.add_argument('--export_filename', "-e", type=str, default=f"exp.png", help='export picture name')
 
     args = parser.parse_args()
