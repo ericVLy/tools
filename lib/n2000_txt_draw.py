@@ -160,8 +160,8 @@ class DrawFromN2000:
                 data_32 = np.frombuffer(org[4:point_count*4+4], dtype=np.int32)
                 self.y_data = np.array([round(float(i/1000), 3) for i in data_32[1:]])
                 self.x_data = np.array([round(float(i* 1/600), 4) for i in range(1, point_count)])  # 0.01s == 1/600min
-                log.info(list(self.x_data))
-                log.info(list(self.y_data))
+                # log.info(list(self.x_data))
+                # log.info(list(self.y_data))
                 file_name = os.path.split(self.org_file_name)[-1].split(".")[0]+"_org_data.csv"
                 file_path = os.path.join(os.path.dirname(self.org_file_name), file_name)
                 self.save_x_y_data(os.path.join(file_path))
@@ -191,8 +191,8 @@ class DrawFromN2000:
             assert len(x_data) == len(y_data)
         self.x_data = x_data
         self.y_data = y_data
-        log.info(list(self.x_data))
-        log.info(list(self.y_data))
+        # log.info(list(self.x_data))
+        # log.info(list(self.y_data))
         file_name = os.path.split(self.text_file)[-1].split(".")[0]+"_text_data.csv"
         file_path = os.path.join(os.path.dirname(self.text_file), file_name)
         self.save_x_y_data(os.path.join(file_path))
