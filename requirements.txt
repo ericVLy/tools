@@ -3,3 +3,4 @@ rdkit
 matplotlib
 scipy
 numpy
+reportlab
