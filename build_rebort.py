@@ -25,15 +25,16 @@ def get_file_path():
 
 if __name__ == "__main__":
     filepath = get_file_path()
-    file_names = os.listdir(filepath)
-    for filename in file_names:
-        if filename.endswith(".org"):
-            file_full_name = os.path.join(filepath, filename)
-            png_file = filename.split(".org")[0]+".png"
-            csv_file = filename.split(".org")[0]+"_org.csv"
-            if not (os.path.isfile(os.path.join(filepath,  png_file)) and os.path.isfile(os.path.join(filepath,  csv_file))):
-                log.info("drawing %s", file_full_name)
-                DrawFromN2000(org_file=file_full_name, show_plt=False).draw_from_org_file()
-                log.info("finished draw")
-                plt.close()
+    # file_names = os.listdir(filepath)
+    for filepath, dirnames, file_names in os.walk(filepath):
+        for filename in file_names:
+            if filename.endswith(".org"):
+                file_full_name = os.path.join(filepath, filename)
+                png_file = filename.split(".org")[0]+".png"
+                csv_file = filename.split(".org")[0]+"_org.csv"
+                if not (os.path.isfile(os.path.join(filepath,  png_file)) and os.path.isfile(os.path.join(filepath,  csv_file))):
+                    log.info("drawing %s", file_full_name)
+                    DrawFromN2000(org_file=file_full_name, show_plt=False).draw_from_org_file()
+                    log.info("finished draw")
+                    plt.close()
             # build report
