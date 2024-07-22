@@ -209,7 +209,7 @@ class DrawFromN2000:
         plt.ylim((0, 320))
         plt.xlim((0, np.max(self.x_data)))
         # x轴
-        self.fig, self.ax = plt.subplots(figsize=(16, 4))
+        self.fig, self.ax = plt.subplots(figsize=(8, 4))
         self.line, = self.ax.plot(self.x_data, self.y_data, linewidth=0.5)
         self.binding_id = self.fig.canvas.mpl_connect('motion_notify_event', self.__on_move)
         x_major_locator=MultipleLocator(2)
@@ -239,8 +239,8 @@ class DrawFromN2000:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='draw n2000 export')
-    parser.add_argument('--text_file', "-t", type=str, help='file name', default=r"C:\Users\admin\Desktop\temp\a.txt")
-    parser.add_argument('--org_file', "-o", type=str, help='file name', default=r"C:\Users\admin\Desktop\tools\export\2024-07-19-01-04.org")
+    parser.add_argument('--text_file', "-t", type=str, help='file name', default=r"")
+    parser.add_argument('--org_file', "-o", type=str, help='file name', default=r"export\2024-07-19-01-04.org")
     parser.add_argument('--export_filename', "-e", type=str, default=f"exp.png", help='export picture name')
 
     args = parser.parse_args()
