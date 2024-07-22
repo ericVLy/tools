@@ -101,14 +101,15 @@ class DrawFromN2000:
                     trapz_area_list.append(self.trapz_area(default_l, default_h))
                     simpson_area_list.append(self.simpson_area(default_l, default_h))
                     self.heigh_points.append({
-                                              "index": count,
-                                              "time_minute": x_heigh, 
-                                              "keep_time_minutes": round(self.x_data[default_h] - self.x_data[default_l], 4),
-                                              "height": y_heigh, 
-                                              "trapz_area": self.trapz_area(default_l, default_h),
-                                              "trapz_area rate(%)": 0,
-                                              "simpson_area": self.simpson_area(default_l, default_h),
-                                              "simpson_area rate(%)": 0,
+                                              "峰号": count,
+                                              "峰名": None,
+                                              "保留时间": x_heigh, 
+                                            #   "宽度": round(self.x_data[default_h] - self.x_data[default_l], 4),
+                                              "峰高": y_heigh, 
+                                              "trapz 峰面积": self.trapz_area(default_l, default_h),
+                                              "trapz 计算含量": 0,
+                                              "simpson 峰面积": self.simpson_area(default_l, default_h),
+                                              "simpson 计算含量": 0,
                                               })
                     self.ax.plot(x_heigh, y_heigh, marker='o', color="red", markersize=3)
                     self.ax.annotate(f'{x_heigh:.2f}',xy=(x_heigh,y_heigh), xytext=(x_heigh,y_heigh*1.05), fontsize=8)
@@ -121,8 +122,8 @@ class DrawFromN2000:
         sum_trapz_area = sum(trapz_area_list)
         sum_simpson_area = sum(simpson_area_list)
         for hp in self.heigh_points:
-            hp["trapz_area rate(%)"] = hp["trapz_area"] / sum_trapz_area
-            hp["simpson_area rate(%)"] = hp["simpson_area"] / sum_simpson_area
+            hp["trapz 计算含量"] = hp["trapz 峰面积"] / sum_trapz_area
+            hp["simpson 计算含量"] = hp["simpson 峰面积"] / sum_simpson_area
         if not self.using_org_file and not self.using_text_file and not os.path.exists("export"):
             os.makedirs("export")
             file_name = "export.csv"
