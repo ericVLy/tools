@@ -15,10 +15,9 @@ def get_file_path():
 if __name__ == "__main__":
     file_name = get_file_path()
     if file_name.endswith(".txt"):
-        DrawFromN2000(txt_file=file_name).draw_from_txt_file()
+        DrawFromN2000(txt_file=file_name, show_plt=True).draw_from_txt_file()
     elif file_name.endswith(".org"):
-        DrawFromN2000(org_file=file_name).draw_from_org_file()
+        DrawFromN2000(org_file=file_name, show_plt=True).draw_from_org_file()
     else:
         sys.exit(-1)
-    plt.show()
     # n2000_txt_to_csv(txt_file=txt_file)

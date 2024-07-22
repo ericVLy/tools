@@ -20,7 +20,7 @@ from lib.log import logprint as log
 
 
 class DrawFromN2000:
-    def __init__(self, txt_file=None, org_file=None, export_filename="exp.png", encoding="gbk"):
+    def __init__(self, txt_file=None, org_file=None, export_filename="exp.png", encoding="gbk", show_plt=False):
         self.text_file = txt_file
         self.org_file_name = org_file
         self.encoding = encoding
@@ -36,8 +36,9 @@ class DrawFromN2000:
         self.heigh_points = []
         self.using_text_file = False
         self.using_org_file = False
+        self.show_plt = show_plt
 
-    def on_move(self, event):
+    def __on_move(self, event):
         if event.inaxes == self.ax:
             # log.info(f'data coords {event.xdata} {event.ydata},',
             #     f'pixel coords {event.x} {event.y}')
@@ -52,28 +53,29 @@ class DrawFromN2000:
             self.fig.canvas.draw_idle()
 
 
-    def on_right_click(self, event):
+    def __on_right_click(self, event):
         if event.button is MouseButton.RIGHT:
             log.info('connecting callback')
             if self.binding_id is not None:
                 plt.disconnect(self.binding_id)
-            self.binding_id = self.fig.canvas.mpl_connect('motion_notify_event', self.on_move)
+            self.binding_id = self.fig.canvas.mpl_connect('motion_notify_event', self.__on_move)
 
-    def on_click(self, event):
+    def __on_click(self, event):
         if event.button is MouseButton.LEFT:
             log.info('disconnecting callback')
             plt.disconnect(self.binding_id)
             self.binding_id = None
 
-    def trapz_area(self, start_index:int, end_index:int):
+    def __trapz_area(self, start_index:int, end_index:int):
         area = trapz(y=self.y_data[start_index: end_index+1], dx=100)
         return round(area, 4)
 
-    def simpson_area(self, start_index:int, end_index:int):
+    def __simpson_area(self, start_index:int, end_index:int):
         area = simpson(self.y_data[start_index: end_index+1], dx=100)
         return round(area, 4)
 
-    def get_heigh_point(self, max_minutes=27):
+    def __get_heigh_point(self, max_minutes=27):
+        self.heigh_points = []
         default_l = 0
         default_h = 0
         default_y = 0
@@ -98,17 +100,17 @@ class DrawFromN2000:
                     y_heigh = np.max(self.y_data[default_l: default_h+1])
                     x_heigh = [x for j,x in enumerate(self.x_data[default_l: default_h+1]) if self.y_data[default_l: default_h+1][j] == y_heigh][0]
                     count+=1
-                    trapz_area_list.append(self.trapz_area(default_l, default_h))
-                    simpson_area_list.append(self.simpson_area(default_l, default_h))
+                    trapz_area_list.append(self.__trapz_area(default_l, default_h))
+                    simpson_area_list.append(self.__simpson_area(default_l, default_h))
                     self.heigh_points.append({
                                               "峰号": count,
                                               "峰名": None,
                                               "保留时间": x_heigh, 
                                             #   "宽度": round(self.x_data[default_h] - self.x_data[default_l], 4),
                                               "峰高": y_heigh, 
-                                              "trapz 峰面积": self.trapz_area(default_l, default_h),
+                                              "trapz 峰面积": self.__trapz_area(default_l, default_h),
                                               "trapz 计算含量": 0,
-                                              "simpson 峰面积": self.simpson_area(default_l, default_h),
+                                              "simpson 峰面积": self.__simpson_area(default_l, default_h),
                                               "simpson 计算含量": 0,
                                               })
                     self.ax.plot(x_heigh, y_heigh, marker='o', color="red", markersize=3)
@@ -140,7 +142,7 @@ class DrawFromN2000:
             writer.writerows(self.heigh_points)
         return
 
-    def save_x_y_data(self, file_name="data.csv"):
+    def __save_x_y_data(self, file_name="data.csv"):
         # np.savetxt(os.path.join("export", file_name), np.array([self.x_data, self.y_data]), delimiter=',')
         with open(file_name, "w", newline="") as file:
             fieldnames = ['time','elec']
@@ -166,8 +168,8 @@ class DrawFromN2000:
                 # log.info(list(self.y_data))
                 file_name = os.path.split(self.org_file_name)[-1].split(".")[0]+"_org_data.csv"
                 file_path = os.path.join(os.path.dirname(self.org_file_name), file_name)
-                self.save_x_y_data(os.path.join(file_path))
-                self.draw()
+                self.__save_x_y_data(os.path.join(file_path))
+                self.__draw()
             return
         assert self.org_file_name, "org file input is None"
 
@@ -197,10 +199,10 @@ class DrawFromN2000:
         # log.info(list(self.y_data))
         file_name = os.path.split(self.text_file)[-1].split(".")[0]+"_text_data.csv"
         file_path = os.path.join(os.path.dirname(self.text_file), file_name)
-        self.save_x_y_data(os.path.join(file_path))
-        self.draw()
+        self.__save_x_y_data(os.path.join(file_path))
+        self.__draw()
 
-    def draw(self):
+    def __draw(self):
 
         matplotlib.rcParams['font.sans-serif'] = ['SimHei']
         # Y轴范围
@@ -209,13 +211,13 @@ class DrawFromN2000:
         # x轴
         self.fig, self.ax = plt.subplots(figsize=(16, 4))
         self.line, = self.ax.plot(self.x_data, self.y_data, linewidth=0.5)
-        self.binding_id = self.fig.canvas.mpl_connect('motion_notify_event', self.on_move)
+        self.binding_id = self.fig.canvas.mpl_connect('motion_notify_event', self.__on_move)
         x_major_locator=MultipleLocator(2)
         self.ax.xaxis.set_major_locator(x_major_locator)
 
         plt.xlabel("时间/min")
         plt.ylabel("电压/mv")
-        self.get_heigh_point()
+        self.__get_heigh_point()
         if self.using_text_file:
             file_name = os.path.split(self.text_file)[-1].split(".")[0]+".png"
             file_path = os.path.join(os.path.dirname(self.text_file), file_name)
@@ -228,10 +230,11 @@ class DrawFromN2000:
         self.ax.set_title(file_name.split(".")[0])
         
         plt.savefig(file_path, dpi=300)
-        # self.binding_id = plt.connect('motion_notify_event', self.on_move)
-        self.fig.canvas.mpl_connect("button_press_event", self.on_right_click)
-        self.fig.canvas.mpl_connect('button_press_event', self.on_click)
-        # plt.show()
+        # self.binding_id = plt.connect('motion_notify_event', self.__on_move)
+        self.fig.canvas.mpl_connect("button_press_event", self.__on_right_click)
+        self.fig.canvas.mpl_connect('button_press_event', self.__on_click)
+        if self.show_plt:
+            plt.show()
 
 
 if __name__ == "__main__":

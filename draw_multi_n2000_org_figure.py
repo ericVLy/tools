@@ -19,6 +19,6 @@ if __name__ == "__main__":
         if filename.endswith(".org"):
             file_full_name = os.path.join(filepath, filename)
             log.info("drawing %s", file_full_name)
-            DrawFromN2000(org_file=file_full_name).draw_from_org_file()
+            DrawFromN2000(org_file=file_full_name, show_plt=False).draw_from_org_file()
             log.info("finished draw")
             plt.close()
