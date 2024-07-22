@@ -79,11 +79,18 @@ class DrawFromN2000:
         default_y = 0
         count = 0
         ndight = 1
+        trapz_area_list = []
+        simpson_area_list = []
         down = False
         up = False
         for i, y_idx in enumerate(self.y_data):
             if self.x_data[i] > max_minutes:
                 # json_data = json.dumps(self.heigh_points, indent=4)
+                sum_trapz_area = sum(trapz_area_list)
+                sum_simpson_area = sum(simpson_area_list)
+                for hp in self.heigh_points:
+                    hp["trapz_area rate(%)"] = hp["trapz_area"] / sum_trapz_area
+                    hp["simpson_area rate(%)"] = hp["simpson_area"] / sum_simpson_area
                 if not self.using_org_file and not self.using_text_file and not os.path.exists("export"):
                     os.makedirs("export")
                     file_name = "export.csv"
@@ -111,14 +118,17 @@ class DrawFromN2000:
                     y_heigh = np.max(self.y_data[default_l: default_h+1])
                     x_heigh = [x for j,x in enumerate(self.x_data[default_l: default_h+1]) if self.y_data[default_l: default_h+1][j] == y_heigh][0]
                     count+=1
+                    trapz_area_list.append(self.trapz_area(default_l, default_h))
+                    simpson_area_list.append(self.simpson_area(default_l, default_h))
                     self.heigh_points.append({
                                               "index": count,
                                               "time_minute": x_heigh, 
                                               "keep_time_minutes": round(self.x_data[default_h] - self.x_data[default_l], 4),
                                               "height": y_heigh, 
                                               "trapz_area": self.trapz_area(default_l, default_h),
+                                              "trapz_area rate(%)": 0,
                                               "simpson_area": self.simpson_area(default_l, default_h),
-                                              "rate(%)": 0,
+                                              "simpson_area rate(%)": 0,
                                               })
                     self.ax.plot(x_heigh, y_heigh, marker='o', color="red", markersize=3)
                     self.ax.annotate(f'{x_heigh:.2f}',xy=(x_heigh,y_heigh), xytext=(x_heigh,y_heigh*1.05), fontsize=8)
