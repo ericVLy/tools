@@ -124,8 +124,8 @@ class DrawFromN2000:
         sum_trapz_area = sum(trapz_area_list)
         sum_simpson_area = sum(simpson_area_list)
         for hp in self.heigh_points:
-            hp["trapz 计算含量"] = hp["trapz 峰面积"] / sum_trapz_area
-            hp["simpson 计算含量"] = hp["simpson 峰面积"] / sum_simpson_area
+            hp["trapz 计算含量"] = f"{round(hp['trapz 峰面积'] / sum_trapz_area * 100, 4)}%"
+            hp["simpson 计算含量"] = f"{round(hp['simpson 峰面积'] / sum_simpson_area * 100, 4)}%"
         if not self.using_org_file and not self.using_text_file and not os.path.exists("export"):
             os.makedirs("export")
             file_name = "export.csv"
