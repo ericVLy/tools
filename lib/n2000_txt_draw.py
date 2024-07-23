@@ -1,7 +1,7 @@
 # N2000
 import argparse
 import os
-import json
+# import json
 import csv
 import sys
 
@@ -16,7 +16,6 @@ from scipy.integrate import simpson
 sys.path.append(os.path.abspath(".."))
 sys.path.append(os.path.abspath("."))
 from lib.log import logprint as log
-
 
 
 class DrawFromN2000:
@@ -52,7 +51,6 @@ class DrawFromN2000:
             self.event_point, = self.ax.plot(x, data, marker='o', color="blue", markersize=5)
             self.fig.canvas.draw_idle()
 
-
     def __on_right_click(self, event):
         if event.button is MouseButton.RIGHT:
             log.info('connecting callback')
@@ -66,12 +64,12 @@ class DrawFromN2000:
             plt.disconnect(self.binding_id)
             self.binding_id = None
 
-    def __trapz_area(self, start_index:int, end_index:int):
-        area = trapz(y=self.y_data[start_index: end_index+1], dx=100)
+    def __trapz_area(self, start_index: int, end_index: int):
+        area = trapz(y=self.y_data[start_index: end_index + 1], dx=100)
         return round(area, 4)
 
-    def __simpson_area(self, start_index:int, end_index:int):
-        area = simpson(self.y_data[start_index: end_index+1], dx=100)
+    def __simpson_area(self, start_index: int, end_index: int):
+        area = simpson(self.y_data[start_index: end_index + 1], dx=100)
         return round(area, 4)
 
     def __get_heigh_point(self, max_minutes=27):
@@ -88,17 +86,17 @@ class DrawFromN2000:
         for i, y_idx in enumerate(self.y_data):
             if self.x_data[i] > max_minutes:
                 break
-            if i> 0 and round(y_idx, ndight) > round(self.y_data[i-1], ndight):
+            if i > 0 and round(y_idx, ndight) > round(self.y_data[i - 1], ndight):
                 up = True
-            elif i> 0 and round(y_idx, ndight) < round(self.y_data[i-1], ndight):
+            elif i > 0 and round(y_idx, ndight) < round(self.y_data[i - 1], ndight):
                 down = True
                 up = False
                 continue
             if down and up:
                 default_h = i
                 if default_h > default_l:
-                    y_heigh = np.max(self.y_data[default_l: default_h+1])
-                    x_heigh = [x for j,x in enumerate(self.x_data[default_l: default_h+1]) if self.y_data[default_l: default_h+1][j] == y_heigh][0]
+                    y_heigh = np.max(self.y_data[default_l: default_h + 1])
+                    x_heigh = [x for j, x in enumerate(self.x_data[default_l: default_h + 1]) if self.y_data[default_l: default_h + 1][j] == y_heigh][0]
                     count+=1
                     trapz_area_list.append(self.__trapz_area(default_l, default_h))
                     simpson_area_list.append(self.__simpson_area(default_l, default_h))
@@ -107,7 +105,7 @@ class DrawFromN2000:
                                               "峰名": None,
                                               "保留时间": x_heigh, 
                                             #   "宽度": round(self.x_data[default_h] - self.x_data[default_l], 4),
-                                              "峰高": y_heigh, 
+                                              "峰高": y_heigh,
                                               "trapz 峰面积": self.__trapz_area(default_l, default_h),
                                               "trapz 计算含量": 0,
                                               "simpson 峰面积": self.__simpson_area(default_l, default_h),
@@ -145,7 +143,7 @@ class DrawFromN2000:
     def __save_x_y_data(self, file_name="data.csv"):
         # np.savetxt(os.path.join("export", file_name), np.array([self.x_data, self.y_data]), delimiter=',')
         with open(file_name, "w", newline="") as file:
-            fieldnames = ['time','elec']
+            fieldnames = ['time', 'elec']
             data = []
             for i in range(len(self.x_data)):
                 data.append({"time": self.x_data[i],

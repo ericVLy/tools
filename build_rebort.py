@@ -31,10 +31,10 @@ if __name__ == "__main__":
         for filename in file_names:
             if filename.endswith(".org"):
                 file_full_name = os.path.join(filepath, filename)
-                png_file = filename.split(".org")[0]+".png"
-                csv_file = filename.split(".org")[0]+"_org.csv"
-                if not (os.path.isfile(os.path.join(filepath,  png_file)) and \
-                    os.path.isfile(os.path.join(filepath,  csv_file))):
+                png_file = filename.split(".org")[0] + ".png"
+                csv_file = filename.split(".org")[0] + "_org.csv"
+                if not (os.path.isfile(os.path.join(filepath, png_file)) and \
+                    os.path.isfile(os.path.join(filepath, csv_file))):
                     log.info("drawing %s", file_full_name)
                     DrawFromN2000(org_file=file_full_name, show_plt=False).draw_from_org_file()
                     log.info("finished draw")
