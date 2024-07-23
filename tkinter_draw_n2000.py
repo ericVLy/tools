@@ -1,7 +1,7 @@
-import os
+"""draw and view one prg file"""
 import sys
 from tkinter import filedialog
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 from lib.n2000_txt_draw import DrawFromN2000
@@ -9,6 +9,9 @@ from lib.n2000_txt_draw import DrawFromN2000
 
 
 def get_file_path():
+    """
+    get file path
+    """
     return filedialog.askopenfilename()
 
 

@@ -1,6 +1,7 @@
+"""draw chem pic by smiles code"""
+import argparse
 from rdkit import Chem
 from rdkit.Chem import Draw
-import argparse
 
 
 
@@ -16,4 +17,6 @@ if __name__ == "__main__":
     parser.add_argument('--length', "-L", type=int, help='image length')
     parser.add_argument('--kekulize', "-K", type=bool, help='kekulize')
     args = parser.parse_args()
-    show_mol_from_smiles(smiles=args.smiles, size=(args.length, args.height,), kekulize=args.kekulize)
+    show_mol_from_smiles(smiles=args.smiles,
+                         size=(args.length, args.height,),
+                         kekulize=args.kekulize)

@@ -1,5 +1,6 @@
+"""draw all org files to png and csv in a path"""
 import os
-import sys
+# import sys
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 
@@ -9,6 +10,7 @@ from lib.log import logprint as log
 
 
 def get_file_path():
+    """ get file path """
     return filedialog.askdirectory()
 
 

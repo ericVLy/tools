@@ -1,3 +1,4 @@
+"""draw chem pic by mol file"""
 from rdkit import Chem
 from rdkit.Chem import Draw
 import argparse
